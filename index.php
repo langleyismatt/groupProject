@@ -9,18 +9,18 @@
             products join suppliers on products.supplierID = suppliers.supplierID
             join department on products.departmentID = department.departmentID ";
         
-        if($_SERVER["REQUEST_METHOD"] == "POST")
+        if($_SERVER["REQUEST_METHOD"] == "POST" && (isset($_POST["usingCompany"]) || isset($_POST["usingDepartment"]) || isset($_POST["usingPrice"])))
         {
             $sql = $sql . "where ";
-            if(isset($_POST["company"]))
+            if(isset($_POST["usingCompany"]))
             {
                 $sql = $sql . "suppliers.supplierID = :company ";
-                if(isset($_POST["department"]) || isset($_POST["usingPrice"]))
+                if(isset($_POST["usingDepartment"]) || isset($_POST["usingPrice"]))
                 {
                     $sql = $sql . "and ";
                 }
             }
-            if(isset($_POST["department"]))
+            if(isset($_POST["usingDepartment"]))
             {
                 $sql = $sql . "department.departmentID = :department ";
                 if(isset($_POST["usingPrice"]))
@@ -44,11 +44,11 @@
         
         if($_SERVER["REQUEST_METHOD"] == "POST")
         {
-            if(isset($_POST["company"]))
+            if(isset($_POST["usingCompany"]))
             {
                 $sqldata->bindParam(":company", $_POST["company"]);
             }
-            if(isset($_POST["department"]))
+            if(isset($_POST["usingDepartment"]))
             {
                 $sqldata->bindParam(":department", $_POST["department"]);
             }
@@ -64,19 +64,14 @@
         
         $result = $sqldata->fetchAll();
         
-        echo "<table border=1><tr>";
-        foreach($result[0] as $a => $b)
-        {
-            echo "<th>$a</th>";
-        }
-        echo "<th></th><th></th></tr>";
+        echo "<table border=1><tr><th>Product Name</th><th>Company</th><th>Department</th><th>Price</th><th colspan=2>Options</th></tr>";
         foreach($result as $a => $b)
         {
             echo "<tr>";
-            foreach($b as $c => $d)
-            {
-                echo "<td>$d</td>";
-            }
+            echo "<td>" . $b["name"] . "</td>";
+            echo "<td>" . $b["companyName"] . "</td>";
+            echo "<td>" . $b["deptName"] . "</td>";
+            echo "<td>$" . $b["price"] . "</td>";
             echo "<form action='landing.php' method='post'><td><input type='submit' value='more info' /></td>";
             echo "<td><input type='submit' value='add to cart' /></td><input type='hidden' name='productID' value=" . $b["productID"] . "/></form>";
             echo "</tr>";
@@ -97,7 +92,12 @@
         
         foreach($result as $a => $b)
         {
-            echo "<option value=\"" . $b["supplierID"] . "\">" . $b["companyName"] . "</option>\n";
+            echo "<option value=\"" . $b["supplierID"] . "\"";
+            if(isset($_POST["usingCompany"]) && $_POST["company"] == $b["supplierID"])
+            {
+                echo "selected";
+            }
+            echo ">" . $b["companyName"] . "</option>\n";
         }
     }
     function populateDepartments()
@@ -113,7 +113,34 @@
         
         foreach($result as $a => $b)
         {
-            echo "<option value=\"" . $b["departmentID"] . "\">" . $b["name"] . "</option>\n";
+            echo "<option value=\"" . $b["departmentID"] . "\"";
+            if(isset($_POST["usingDepartment"]) && $_POST["department"] == $b["departmentID"])
+            {
+                echo "selected";
+            }
+            echo ">" . $b["name"] . "</option>\n";
+        }
+    }
+    
+    function checkCompany()
+    {
+        if(isset($_POST["usingCompany"]))
+        {
+            echo "checked";
+        }
+    }
+    function checkDepartment()
+    {
+        if(isset($_POST["usingDepartment"]))
+        {
+            echo "checked";
+        }
+    }
+    function checkPrice()
+    {
+        if(isset($_POST["usingPrice"]))
+        {
+            echo "checked";
         }
     }
 
@@ -138,14 +165,15 @@
       <br /><br />    
       
       <form action="" method="post">
-          <label>Company: </label><select name="company">
+          <input type="checkbox" name="usingCompany" <?= checkCompany(); ?>/><label>Company: </label><select name="company">
               <?= populateCompanies(); ?>
-          </select>
-          <label>Department: </label><select name="department">
+          </select><br />
+          <input type="checkbox" name="usingDepartment" <?= checkDepartment(); ?>/><label>Department: </label><select name="department">
               <?= populateDepartments(); ?>
-          </select>
-          <label>Price: </label><input type="checkbox" name="usingPrice" /><label> between </label>
-          <input type="number" step="0.01" name="priceLow" /><label> and </label><input type="number" step="0.01" name="priceHigh" />
+          </select><br />
+          <input type="checkbox" name="usingPrice" <?= checkPrice(); ?>/><label>Price between </label>
+          <input type="number" step="0.01" name="priceLow" value="<?= $_POST["priceLow"] ?>" /><label> and </label>
+              <input type="number" step="0.01" name="priceHigh" value="<?= $_POST["priceHigh"] ?>"/><br />
           <input type="submit" value="modify table" />
       </form>
       
