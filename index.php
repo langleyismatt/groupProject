@@ -69,7 +69,7 @@
         {
             $sql = $sql . "order by products.name asc";
         }
-        echo $sql;
+        //echo $sql;
     
         $sqldata = $conn->prepare($sql);
         
