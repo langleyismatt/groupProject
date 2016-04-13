@@ -9,9 +9,16 @@
             products join suppliers on products.supplierID = suppliers.supplierID
             join department on products.departmentID = department.departmentID ";
         
-        if($_SERVER["REQUEST_METHOD"] == "POST" && (isset($_POST["usingCompany"]) || isset($_POST["usingDepartment"]) || isset($_POST["usingPrice"])))
+        if($_SERVER["REQUEST_METHOD"] == "POST" &&
+            (isset($_POST["usingCompany"]) || isset($_POST["usingDepartment"]) ||
+            isset($_POST["usingPrice"]) || isset($_POST["usingSort"])))
         {
-            $sql = $sql . "where ";
+            if(isset($_POST["usingCompany"]) || isset($_POST["usingDepartment"]) ||
+                isset($_POST["usingPrice"]))
+            {
+                $sql = $sql . "where ";
+            }
+            
             if(isset($_POST["usingCompany"]))
             {
                 $sql = $sql . "suppliers.supplierID = :company ";
@@ -33,12 +40,36 @@
                 $sql = $sql . "products.price between :priceLow and :priceHigh ";
             }
             
-            $sql = $sql . "order by products.name asc";
+            if(isset($_POST["usingSort"]))
+            {
+                if($_POST["sortColumn"] == 1)
+                {
+                    $sql = $sql . "order by products.name ";
+                }
+                else if($_POST["sortColumn"] == 2)
+                {
+                    $sql = $sql . "order by products.price ";
+                }
+                
+                if($_POST["sortOrder"] == "ascending")
+                {
+                    $sql = $sql . "asc";
+                }
+                else
+                {
+                    $sql = $sql . "desc";
+                }
+            }
+            else
+            {
+                $sql = $sql . "order by products.name asc";
+            }
         }
         else
         {
             $sql = $sql . "order by products.name asc";
         }
+        echo $sql;
     
         $sqldata = $conn->prepare($sql);
         
@@ -143,6 +174,27 @@
             echo "checked";
         }
     }
+    function checkSorting()
+    {
+        if(isset($_POST["usingSort"]))
+        {
+            echo "checked";
+        }
+    }
+    function setAscending()
+    {
+        if(!isset($_POST["usingSort"]) || $_POST["sortOrder"] == "ascending" )
+        {
+            echo "checked";
+        }
+    }
+    function setDescending()
+    {
+        if(isset($_POST["usingSort"]) && $_POST["sortOrder"] == "descending")
+        {
+            echo "checked";
+        }
+    }
 
 ?>
 
@@ -174,6 +226,13 @@
           <input type="checkbox" name="usingPrice" <?= checkPrice(); ?>/><label>Price between </label>
           <input type="number" step="0.01" name="priceLow" value="<?= $_POST["priceLow"] ?>" /><label> and </label>
               <input type="number" step="0.01" name="priceHigh" value="<?= $_POST["priceHigh"] ?>"/><br />
+          <input type="checkbox" name="usingSort" <?= checkSorting(); ?>/><label>Sort using</label>
+              <select name="sortColumn">
+                  <option value="1">Product Name</option>
+                  <option value="2">Price</option>
+              </select>
+              <label>Ascending: </label><input type="radio" name="sortOrder" value="ascending" <?= setAscending(); ?> />
+              <label>Descending: </label><input type="radio" name="sortOrder" value="descending" <?= setDescending(); ?>/><br />
           <input type="submit" value="modify table" />
       </form>
       
