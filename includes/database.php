@@ -1,8 +1,8 @@
 
 <?php
     function dbConnect() {
-        $host = "127.0.0.1";
-        $username = "langleyismatt";
+        $host = "localhost";
+        $username = "root";
         $password = "";
 
 
