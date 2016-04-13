@@ -69,7 +69,6 @@
         {
             $sql = $sql . "order by products.name asc";
         }
-        echo $sql;
     
         $sqldata = $conn->prepare($sql);
         
@@ -103,8 +102,9 @@
             echo "<td>" . $b["companyName"] . "</td>";
             echo "<td>" . $b["deptName"] . "</td>";
             echo "<td>$" . $b["price"] . "</td>";
-            echo "<form action='landing.php' method='post'><td><input type='submit' value='more info' /></td>";
-            echo "<td><input type='submit' value='add to cart' /></td><input type='hidden' name='productID' value=" . $b["productID"] . "/></form>";
+            echo "<form action='landing.php' method='post'><td><input type='submit' name='justLooking' value='more info' /></td>";
+            echo "<td><input type='submit' name='addToCart' value='add to cart' />";
+            echo "<input type='number' name='quantity' min='1' value='1' /></td><input type='hidden' name='productID' value=" . $b["productID"] . "/></form>";
             echo "</tr>";
         }
         echo "</table>";
@@ -205,6 +205,13 @@
 </head>
 
 <body>
+    <?php
+        session_start();
+        if(!isset($_SESSION["shoppingCart"]))
+        {
+            $_SESSION["shoppingCart"] = array();
+        }
+    ?>
   <div>
     <header>
       <h1>Grocery Store</h1>
@@ -216,6 +223,7 @@
     
       <br /><br />    
       
+      <div style="float:left;">
       <form action="" method="post">
           <input type="checkbox" name="usingCompany" <?= checkCompany(); ?>/><label>Company: </label><select name="company">
               <?= populateCompanies(); ?>
@@ -235,6 +243,8 @@
               <label>Descending: </label><input type="radio" name="sortOrder" value="descending" <?= setDescending(); ?>/><br />
           <input type="submit" value="modify table" />
       </form>
+      <a href="cart.php">Go to cart</a>
+      </div>
       
       <br /><br />
       
