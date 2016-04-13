@@ -252,11 +252,18 @@
     
         displayAllProducts();
        
-        //moreInfo();
-        
       ?>
+      
 
     </div>
+  </div>
+  <div><br /><br />
+      <form method = "link" action="https://docs.google.com/document/d/161N12twTquDTJaKTHM3mjtYZzPrvCE4b-MuzuFOuENk/edit?usp=sharing">
+          <input type="submit" value="Google Doc Writeup">
+          </form>
+      <form method = "link" action="https://github.com/langleyismatt/groupProject">
+          <input type="submit" value = "GitHub Repo">
+          </form>
   </div>
 </body>
 </html>
