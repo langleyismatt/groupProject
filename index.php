@@ -202,6 +202,7 @@
 <html lang="en">
 <head>
   <title>Group Project</title>
+  <link type="text/css" rel="stylesheet" href="css/mycss.css" >
 </head>
 
 <body>
@@ -212,18 +213,11 @@
             $_SESSION["shoppingCart"] = array();
         }
     ?>
-  <div>
-    <header>
-      <h1>Grocery Store</h1>
-    </header>
-
-   
-    <div>
-     <strong> Welcome! - Select and item to learn more or add to cart!</strong>
-    
-      <br /><br />    
-      
-      <div style="float:left;">
+    <div class="header">
+        <h1>Grocery Store</h1>
+        <strong> Welcome! - Select and item to learn more or add to cart!</strong>
+    </div>
+    <div class="leftMenu">
       <form action="" method="post">
           <input type="checkbox" name="usingCompany" <?= checkCompany(); ?>/><label>Company: </label><select name="company">
               <?= populateCompanies(); ?>
@@ -244,20 +238,15 @@
           <input type="submit" value="modify table" />
       </form>
       <a href="cart.php">Go to cart</a>
-      </div>
-      
-      <br /><br />
-      
+    </div>
+    <div class="centerData">
       <?php
     
         displayAllProducts();
        
       ?>
-      
-
     </div>
-  </div>
-  <div><br /><br />
+  <div class="footer">
       <form method = "link" action="https://docs.google.com/document/d/161N12twTquDTJaKTHM3mjtYZzPrvCE4b-MuzuFOuENk/edit?usp=sharing">
           <input type="submit" value="Google Doc Writeup">
           </form>

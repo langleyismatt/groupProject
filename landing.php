@@ -52,29 +52,22 @@
 <html lang="en">
 <head>
   <title>Group Project</title>
+  <link type="text/css" rel="stylesheet" href="css/mycss.css" >
 </head>
 
 <body>
   <?php
     session_start();
   ?>
-  <div>
-    <header>
-      <h1>Grocery Store</h1>
-    </header>
-
-   
-    <div>
-     <strong> Your Item!</strong>
-    
-      <br /><br />    
-      <?php
-        moreInfo();
-      ?>
-      
-      <a href="index.php">Go Back</a>
-
-    </div>
+  <div class="header">
+    <h1>Grocery Store</h1>
+    <strong> Your Item!</strong>
+  </div>
+  <div class="centerData">
+    <?php
+      moreInfo();
+    ?>
+    <a href="index.php">Go Back</a>
   </div>
 </body>
 </html>

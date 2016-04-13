@@ -1,0 +1,33 @@
+.header
+{
+    text-align:center;
+}
+.leftMenu
+{
+    float:left;
+    padding:20px;
+}
+.centerData
+{
+    text-align:center;
+    padding:20px;
+}
+.footer
+{
+    margin:auto;
+    text-align:center;
+}
+
+.footer form
+{
+    display:inline;
+}
+
+.centerData table
+{
+    margin:auto;
+}
+.centerData td
+{
+    padding:5px;
+}
